@@ -2,7 +2,7 @@ package sf.alphaBear.httpio.pojo;
 
 import java.util.List;
 
-public class State {
+public class MapState {
 	AI ai;
 	List<Wall> walls;
 	List<Job> jobs;

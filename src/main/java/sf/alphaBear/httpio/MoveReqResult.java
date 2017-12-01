@@ -6,7 +6,7 @@ public class MoveReqResult {
 	String msg;
 	String id;
 	
-	State state;
+	MapState state;
 	int reward;
 	boolean done;
 	
@@ -22,10 +22,10 @@ public class MoveReqResult {
 	public void setId(String id) {
 		this.id = id;
 	}
-	public State getState() {
+	public MapState getState() {
 		return state;
 	}
-	public void setState(State state) {
+	public void setState(MapState state) {
 		this.state = state;
 	}
 	public int getReward() {

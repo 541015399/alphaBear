@@ -6,7 +6,7 @@ public class EnvReqResult {
 	String msg;
 	String id;
 	
-	State state;
+	MapState state;
 
 	public String getMsg() {
 		return msg;
@@ -24,11 +24,11 @@ public class EnvReqResult {
 		this.id = id;
 	}
 
-	public State getState() {
+	public MapState getState() {
 		return state;
 	}
 
-	public void setState(State state) {
+	public void setState(MapState state) {
 		this.state = state;
 	}
 	
