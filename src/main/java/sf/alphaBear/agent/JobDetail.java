@@ -3,7 +3,7 @@ package sf.alphaBear.agent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Package {
+public class JobDetail {
 	final int x;
 	final int y;
 	final int initReward;
@@ -13,7 +13,7 @@ public class Package {
 	int lifeEndStep;
 	int curReward;
 	
-	public Package(int x, int y, int initReward, int step) {
+	public JobDetail(int x, int y, int initReward, int step) {
 		this.x = x;
 		this.y = y;
 		this.initReward = initReward;
