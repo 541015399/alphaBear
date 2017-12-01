@@ -26,8 +26,9 @@ public class BearContext {
 	int curStep = 0;
 	
 	List<MoveReqResult> hisMoveRlt;
+	MoveReqResult lastMoveRlt = null;
 	List<MapState> hisState;
-	MoveReqResult lastState = null;
+	MapState lastMapState = null;
 	
 	long totalUseTime = 0;
 	int totalReward = 0;
@@ -44,6 +45,7 @@ public class BearContext {
 		this.avaiableJobDetails = new ConcurrentHashMap<String, JobDetail>();
 		// 最初状态
 		this.hisState.add(env.getState());
+		this.lastMapState = env.getState();
 	}
 	public MoveReqResult doStepReq(MoveDecision decision) {
 		return HttpIO.step(env.getId(), decision);
@@ -53,7 +55,9 @@ public class BearContext {
 		this.curStep = step;
 		this.hisMoveRlt.add(moveReqResult);
 		this.hisState.add(moveReqResult.getState());
-		this.lastState = moveReqResult;
+		this.lastMoveRlt = moveReqResult;
+		this.lastMapState = moveReqResult.getState();
+		
 		this.totalUseTime += useTime;
 		this.totalReward += reward;
 		
@@ -88,18 +92,57 @@ public class BearContext {
 	}
 	
 	public AI getAI() {
-		return lastState.getState().getAi();
+		return lastMoveRlt.getState().getAi();
 	}
 	public List<Wall> getWalls(){
 		return env.getState().getWalls();
 	}
 	public List<Job> getJobs(){
-		return lastState.getState().getJobs();
+		return lastMoveRlt.getState().getJobs();
 	}
 	public Map<String, JobDetail> getAvaibleJobDetails(){
 		return avaiableJobDetails;
 	}
 
+	public List<MoveReqResult> getHisMoveRlt() {
+		return hisMoveRlt;
+	}
+	public void setHisMoveRlt(List<MoveReqResult> hisMoveRlt) {
+		this.hisMoveRlt = hisMoveRlt;
+	}
+	public MoveReqResult getLastMoveRlt() {
+		return lastMoveRlt;
+	}
+	public void setLastMoveRlt(MoveReqResult lastMoveRlt) {
+		this.lastMoveRlt = lastMoveRlt;
+	}
+	public List<MapState> getHisState() {
+		return hisState;
+	}
+	public void setHisState(List<MapState> hisState) {
+		this.hisState = hisState;
+	}
+	public MapState getLastMapState() {
+		return lastMapState;
+	}
+	public void setLastMapState(MapState lastMapState) {
+		this.lastMapState = lastMapState;
+	}
+	public ConcurrentHashMap<String, JobDetail> getAllJobDetails() {
+		return allJobDetails;
+	}
+	public void setAllJobDetails(ConcurrentHashMap<String, JobDetail> allJobDetails) {
+		this.allJobDetails = allJobDetails;
+	}
+	public ConcurrentHashMap<String, JobDetail> getAvaiableJobDetails() {
+		return avaiableJobDetails;
+	}
+	public void setAvaiableJobDetails(ConcurrentHashMap<String, JobDetail> avaiableJobDetails) {
+		this.avaiableJobDetails = avaiableJobDetails;
+	}
+	public void setTotalUseTime(long totalUseTime) {
+		this.totalUseTime = totalUseTime;
+	}
 	public EnvReqResult getEnv() {
 		return env;
 	}
@@ -131,15 +174,6 @@ public class BearContext {
 	public void setHisStates(List<MoveReqResult> hisStates) {
 		this.hisMoveRlt = hisStates;
 	}
-
-	public MoveReqResult getLastState() {
-		return lastState;
-	}
-
-	public void setLastState(MoveReqResult lastState) {
-		this.lastState = lastState;
-	}
-
 	public long getTotalUseTime() {
 		return totalUseTime;
 	}
