@@ -1,7 +1,14 @@
 package sf.alphaBear.agent;
 
-import sf.alphaBear.Env;
+import sf.alphaBear.MoveDecision;
 
-public class GreedyAstarBear {
-	Env env ;
+public class GreedyAstarBear extends BearTemplate {
+	public GreedyAstarBear(BearContext context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+
+	public MoveDecision myDecision() {
+		return null;
+	}
 }

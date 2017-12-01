@@ -1,20 +1,26 @@
 package sf.alphaBear.agent;
 
-import sf.alphaBear.MoveDirection;
+import sf.alphaBear.MoveDecision;
+import sf.alphaBear.httpio.EnvReqResult;
 
-public class SimpleBear {
+public class SimpleBear extends BearTemplate {
+	public SimpleBear(BearContext context) {
+		super(context);
+		// TODO Auto-generated constructor stub
+	}
+	
 	static int maxX = 12;
 	static int curX = 0;
 	static boolean moveR = true;
 	
-	public static MoveDirection myDecision() {
-		MoveDirection dir = null;
+	public MoveDecision myDecision() {
+		MoveDecision dir = null;
 		if (moveR) {
 			curX ++;
-			dir = MoveDirection.R;
+			dir = MoveDecision.R;
 		}else {
 			curX --;
-			dir = MoveDirection.L;
+			dir = MoveDecision.L;
 		}
 		if (curX>=maxX) {
 			moveR = false;

@@ -10,9 +10,10 @@ import sf.alphaBear.httpio.HttpIO;
 public class AlphaBearMain {
     public static void main( String[] args ){
 	    EnvReqResult env = HttpIO.createEnv();
-	    AlphaBear smartBear = new AlphaBear();
+	    AlphaBearController smartBear = new AlphaBearController();
+	    int maxStep = 288; 
 	    
-	    int totalReward = smartBear.gogogo(env, 288);
+	    int totalReward = smartBear.gogogo(env, maxStep);
 	    	
 	    	System.out.println( "congratulations, reward = " + totalReward);
     }

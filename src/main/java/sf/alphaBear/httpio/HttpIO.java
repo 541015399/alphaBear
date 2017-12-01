@@ -5,7 +5,7 @@ package sf.alphaBear.httpio;
 import com.google.gson.Gson;
 
 import sf.alphaBear.Env;
-import sf.alphaBear.MoveDirection;
+import sf.alphaBear.MoveDecision;
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
@@ -21,7 +21,7 @@ public class HttpIO {
 		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
 		return rltObj;
 	}
-	public static MoveReqResult step(String envId, MoveDirection direction) {
+	public static MoveReqResult step(String envId, MoveDecision direction) {
 		String url = HOST + ENV.getLabel() + "/" + envId + "/move";
 		
 		Gson gson = new Gson();
@@ -38,7 +38,7 @@ public class HttpIO {
 		EnvReqResult rltObj = createEnv();
 		System.out.println(rltObj.msg);
 		
-		MoveReqResult moveReqResult = step(rltObj.getId(), MoveDirection.U);
+		MoveReqResult moveReqResult = step(rltObj.getId(), MoveDecision.U);
 		
 		System.out.println(moveReqResult.getReward());
 	}

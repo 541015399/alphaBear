@@ -1,5 +1,5 @@
 package sf.alphaBear;
 
-public enum MoveDirection {
+public enum MoveDecision {
 	U, D, L, R;
 }
