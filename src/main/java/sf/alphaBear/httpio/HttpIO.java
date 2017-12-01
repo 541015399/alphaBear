@@ -9,8 +9,13 @@ import sf.alphaBear.MoveDecision;
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
-	static String HOST = "http://10.2.5.64/";
+	static String HOST = "http://10.2.5.64:5555/";
 	static Env ENV = Env.TEST;
+	
+	public static long useTime = 0;
+	public final static void resetUseTime () {
+		useTime = 0;
+	}
 	
 	public static EnvReqResult createEnv() {
 		String url =  HOST + ENV.getLabel();
@@ -31,6 +36,8 @@ public class HttpIO {
 		String rlt = HttpUtil.executePost(url, "{\"direction\": \"" + direction + "\"}");
 		long ut = System.currentTimeMillis() - st;
 		System.out.println("move http time = " + ut);
+		
+		useTime += ut;
 		
 		MoveReqResult rltObj = gson.fromJson(rlt, MoveReqResult.class);
 		return rltObj;

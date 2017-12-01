@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.neo4j.cypher.internal.compiler.v2_3.ast.rewriters.projectFreshSortExpressions;
 
+import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.httpio.EnvReqResult;
 import sf.alphaBear.httpio.HttpIO;
@@ -22,7 +23,7 @@ public class BearContext {
 	// context
 	EnvReqResult env ;
 	
-	int maxStep = 288;
+	int maxStep = 400;
 	int curStep = 0;
 	
 	List<MoveReqResult> hisMoveRlt;
@@ -60,6 +61,11 @@ public class BearContext {
 		
 		this.totalUseTime += useTime;
 		this.totalReward += reward;
+		
+		if (moveReqResult==null || moveReqResult.getState()==null) {
+			System.out.println("null result");
+			return ;
+		}
 		
 		List<Job> jobUpdates = moveReqResult.getState().getJobs();
 		if (jobUpdates!=null && jobUpdates.size()>0) {

@@ -18,7 +18,7 @@ import sf.alphaBear.agent.db.LookUpTable;
 import sf.alphaBear.httpio.pojo.AI;
 import sf.alphaBear.httpio.pojo.Job;
 
-public class GreedyAstarBear extends BearTemplate {
+public class GreedyAstarBearV4000 extends BearTemplate {
 	GridStateDb db;
 	AstarAlgoByNeo4j astarAlgo;
 
@@ -29,7 +29,7 @@ public class GreedyAstarBear extends BearTemplate {
 	
 	LookUpTable pathLookUpTbl ;
 	
-	public GreedyAstarBear(BearContext context) {
+	public GreedyAstarBearV4000(BearContext context) {
 		super(context);
 		
 		walkHis = new ArrayList<Point>();
@@ -83,7 +83,7 @@ public class GreedyAstarBear extends BearTemplate {
 			.collect(Collectors.toList());
 		
 		List<JobProfit> newList = new ArrayList<>();
-		int range = 2;
+		int range = 3;
 		while(newList.size()==0) {
 			final int fRange = range;
 			newList = jobProfits.stream().filter(o->o.getPath().maxSteps()<=fRange).collect(Collectors.toList());

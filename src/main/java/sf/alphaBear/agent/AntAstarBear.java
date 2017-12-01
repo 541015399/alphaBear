@@ -3,9 +3,12 @@ package sf.alphaBear.agent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
+import org.neo4j.cypher.internal.frontend.v2_3.ast.functions.Rand;
 
+import scala.Array;
 import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.Point;
@@ -39,7 +42,24 @@ public class AntAstarBear extends BearTemplate {
 		System.out.println("look up table use time - " + ut);
 	}
 	
+	Random random = new Random();
+	int getSeed(int bound) {
+		return Math.abs(random.nextInt()) % bound;
+	}
 	private JobProfit reSchedule(List<Job> jobs, AI ai) {
+		List<List<Job>> jobPathSeeds = new ArrayList<>();
+		int bound = 5;
+		for(int i=0;i<bound;i++) {
+			Job seed = jobs.get(getSeed(bound));
+			List<Job> seedPath = new ArrayList<>();
+			seedPath.add(seed);
+			jobPathSeeds.add(seedPath);
+		}
+		jobPathSeeds.parallelStream().map(j->{
+			
+			return 1;
+		}).count();
+		
 		
 		List<JobProfit> jobProfits = jobs.stream().map(j->{
 			// SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());

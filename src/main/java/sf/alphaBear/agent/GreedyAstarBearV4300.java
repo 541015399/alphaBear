@@ -18,7 +18,7 @@ import sf.alphaBear.agent.db.LookUpTable;
 import sf.alphaBear.httpio.pojo.AI;
 import sf.alphaBear.httpio.pojo.Job;
 
-public class GreedyAstarBear extends BearTemplate {
+public class GreedyAstarBearV4300 extends BearTemplate {
 	GridStateDb db;
 	AstarAlgoByNeo4j astarAlgo;
 
@@ -29,7 +29,7 @@ public class GreedyAstarBear extends BearTemplate {
 	
 	LookUpTable pathLookUpTbl ;
 	
-	public GreedyAstarBear(BearContext context) {
+	public GreedyAstarBearV4300(BearContext context) {
 		super(context);
 		
 		walkHis = new ArrayList<Point>();
