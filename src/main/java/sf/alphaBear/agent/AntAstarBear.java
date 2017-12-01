@@ -3,10 +3,8 @@ package sf.alphaBear.agent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
-import org.neo4j.cypher.internal.compiler.v2_3.commands.indexQuery;
 
 import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
@@ -18,7 +16,7 @@ import sf.alphaBear.agent.db.LookUpTable;
 import sf.alphaBear.httpio.pojo.AI;
 import sf.alphaBear.httpio.pojo.Job;
 
-public class GreedyAstarBear extends BearTemplate {
+public class AntAstarBear extends BearTemplate {
 	GridStateDb db;
 	AstarAlgoByNeo4j astarAlgo;
 
@@ -29,7 +27,7 @@ public class GreedyAstarBear extends BearTemplate {
 	
 	LookUpTable pathLookUpTbl ;
 	
-	public GreedyAstarBear(BearContext context) {
+	public AntAstarBear(BearContext context) {
 		super(context);
 		
 		walkHis = new ArrayList<Point>();
@@ -41,43 +39,19 @@ public class GreedyAstarBear extends BearTemplate {
 		System.out.println("look up table use time - " + ut);
 	}
 	
-	/*
-	 * Path profit
-	 */
-	private String _reScheduleJobKey(int x, int y) {
-		return "x" + x + "_y" + y;
-	}
 	private JobProfit reSchedule(List<Job> jobs, AI ai) {
-		ConcurrentHashMap<String, Job> jobMap = new ConcurrentHashMap<String, Job>();
-		jobs.forEach(j->jobMap.put(_reScheduleJobKey(j.getX(), j.getY()), j));
+		
 		List<JobProfit> jobProfits = jobs.stream().map(j->{
 			// SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
+			
 			SchedulePath schedulePath = pathLookUpTbl.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
-			int totalProfit = 0;
-			for(int i=0;i<schedulePath.getPath().size();i++) {
-				Point p = schedulePath.getPath().get(i);
-				Job tj = jobMap.get(_reScheduleJobKey(p.getX(), p.getY()));
-				
-				if (tj==null) {
-					continue;
-				}
-				int steps = i+1;
-				JobDetail detail = context.getDetail(tj);
-				
-				int cost = detail==null? steps : detail.predictReward(steps);
-				int profit = j.getValue() - cost;
-				totalProfit += profit;
-			}
 			
 			int steps = schedulePath.maxSteps() + 1;
-			/*
 			JobDetail detail = context.getDetail(j);
 			int cost = detail==null? steps : detail.predictReward(steps);
 			int profit = j.getValue() - cost;
 			float avgProfit = profit/(float)steps;
-			*/
-			float avgProfit = totalProfit/(float)steps;
-			return new JobProfit(j, totalProfit, avgProfit, schedulePath);
+			return new JobProfit(j, profit, avgProfit, schedulePath);
 		})
 			.filter(o->o.getProfit()>0)
 			.collect(Collectors.toList());
