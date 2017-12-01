@@ -29,7 +29,8 @@ public class BearContext {
 	public BearContext(EnvReqResult env, int maxStep) {
 		this.env = env;
 		this.maxStep = maxStep;
-		this.hisMoveRlt = new ArrayList<MoveReqResult>();
+		this.hisMoveRlt = new ArrayList<>();
+		this.hisState = new ArrayList<>();
 		// 最初状态
 		this.hisState.add(env.getState());
 	}
