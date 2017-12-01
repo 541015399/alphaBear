@@ -1,5 +1,6 @@
 package sf.alphaBear.agent;
 
+import java.awt.datatransfer.FlavorTable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -49,13 +50,14 @@ public class GreedyAstarBear extends BearTemplate {
 			JobDetail detail = context.getDetail(j);
 			int cost = detail==null? steps : detail.predictReward(steps);
 			int profit = j.getValue() - cost;
-			return new JobProfit(j, profit, schedulePath);
+			float avgProfit = profit/(float)steps;
+			return new JobProfit(j, profit, avgProfit, schedulePath);
 		})
 			.filter(o->o.getProfit()>0)
 			.collect(Collectors.toList());
 		
 		List<JobProfit> newList = new ArrayList<>();
-		int range = 2;
+		int range = 1;
 		while(newList.size()==0) {
 			final int fRange = range;
 			newList = jobProfits.stream().filter(o->o.getPath().maxSteps()<=fRange).collect(Collectors.toList());
@@ -66,7 +68,10 @@ public class GreedyAstarBear extends BearTemplate {
 		jobProfits.sort(new Comparator<JobProfit>() {
 			@Override
 			public int compare(JobProfit o1, JobProfit o2) {
-				return o2.getProfit() - o1.getProfit();
+				// return o2.getProfit() - o1.getProfit();
+				Float f2 = o2.getAvgProfit();
+				Float f1 = o1.getAvgProfit();
+				return f2.compareTo(f1);
 			}
 		});
 		
@@ -97,7 +102,8 @@ public class GreedyAstarBear extends BearTemplate {
 		}else {
 			// 正常走，不管如何，对比一下
 			JobProfit tryJob = reSchedule(jobs, ai);
-			if (tryJob.getProfit() > curJobProfit.getProfit()) {
+			//if (tryJob.getProfit() > curJobProfit.getProfit()) {
+			if (tryJob.getAvgProfit() > curJobProfit.getAvgProfit()) {
 				System.out.println("reschedule gain -" + (tryJob.getProfit() - curJobProfit.getProfit()));
 				curJobProfit = tryJob;
 				schedulePath = curJobProfit.getPath();

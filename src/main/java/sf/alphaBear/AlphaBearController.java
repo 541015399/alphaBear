@@ -33,7 +33,7 @@ public class AlphaBearController {
 
 			context.appendState(i, moveRlt, ut, moveRlt.getReward());
 
-			System.out.println("step " + i + ", time=" + ut + ", reward=" + moveRlt.getReward() + ",random walks=" + bearAgent.getRandomWalks());
+			System.out.println("step " + i + ", time=" + ut + ", reward=" + moveRlt.getReward()  + ",totalReard=" + context.getTotalReward() + ",random walks=" + bearAgent.getRandomWalks());
 		}
 
 		System.out.println("total time = " + context.getTotalUseTime() + ", total reward = " + context.getTotalReward());

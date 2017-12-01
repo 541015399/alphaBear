@@ -45,7 +45,7 @@ public class GreedyAstarBearV1704 extends BearTemplate {
 					SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
 					int steps = schedulePath.maxSteps() + 1;
 					int profit = j.getValue() - steps;
-					return new JobProfit(j, profit, schedulePath);
+					return new JobProfit(j, profit, 0f, schedulePath);
 				}).collect(Collectors.toList());
 				
 				jobProfits.sort(new Comparator<JobProfit>() {

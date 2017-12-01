@@ -2,6 +2,9 @@ package sf.alphaBear.agent;
 
 import java.util.Random;
 
+import org.neo4j.cypher.internal.compiler.v2_3.helpers.Converge.iterateUntilConverged;
+import org.neo4j.register.Register.Int;
+
 import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.Point;
@@ -87,13 +90,19 @@ public abstract class BearTemplate {
 		SchedulePath path;
 		Job job;
 		int profit;
-		public JobProfit(Job job, int profit, SchedulePath path) {
+		float avgProfit;
+		public JobProfit(Job job, int profit, float avgProfit, SchedulePath path) {
 			this.job = job;
+			this.avgProfit = avgProfit;
 			this.profit = profit;
 			this.path = path;
 		}
 		public Job getJob() {
 			return job;
+		}
+		
+		public float getAvgProfit() {
+			return avgProfit;
 		}
 		public int getProfit() {
 			return profit;
