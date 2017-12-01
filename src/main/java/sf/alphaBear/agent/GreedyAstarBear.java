@@ -1,21 +1,10 @@
 package sf.alphaBear.agent;
 
-import java.awt.datatransfer.FlavorTable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.lucene.analysis.fi.FinnishAnalyzer;
-import org.neo4j.graphdb.Path;
-
-import scala.reflect.internal.Symbols.ClassSymbol;
-import scala.reflect.internal.Trees.New;
 import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.Point;
