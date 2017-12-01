@@ -1,11 +1,8 @@
 package sf.alphaBear;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import sf.alphaBear.agent.BearContext;
 import sf.alphaBear.agent.BearTemplate;
-import sf.alphaBear.agent.SimpleBear;
+import sf.alphaBear.agent.GreedyAstarBear;
 import sf.alphaBear.httpio.EnvReqResult;
 import sf.alphaBear.httpio.MoveReqResult;
 
@@ -17,7 +14,8 @@ public class AlphaBearController {
 	public int gogogo(EnvReqResult env, int maxStep) {
 		this.env = env;
 		this.context = new BearContext(env, maxStep);
-		this.bearAgent = new SimpleBear(context);
+		// this.bearAgent = new SimpleBear(context);
+		this.bearAgent = new GreedyAstarBear(context);
 		
 		long st = System.currentTimeMillis();
 		long et = System.currentTimeMillis();

@@ -16,5 +16,6 @@ public class AlphaBearMain {
 	    int totalReward = smartBear.gogogo(env, maxStep);
 	    	
 	    	System.out.println( "congratulations, reward = " + totalReward);
+	    	System.out.println( "id = " + env.getId());
     }
 }

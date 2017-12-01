@@ -92,13 +92,13 @@ public class BearContext {
 	}
 	
 	public AI getAI() {
-		return lastMoveRlt.getState().getAi();
+		return lastMapState.getAi();
 	}
 	public List<Wall> getWalls(){
 		return env.getState().getWalls();
 	}
 	public List<Job> getJobs(){
-		return lastMoveRlt.getState().getJobs();
+		return lastMapState.getJobs();
 	}
 	public Map<String, JobDetail> getAvaibleJobDetails(){
 		return avaiableJobDetails;

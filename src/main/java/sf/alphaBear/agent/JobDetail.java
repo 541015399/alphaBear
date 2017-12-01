@@ -23,14 +23,26 @@ public class JobDetail implements Comparable<JobDetail> {
 	/*
 	 * 当前尚未开发完成， 所以不推荐使用
 	 */
-	@Deprecated
 	public int predictReward(int nSteps) {
-		return curReward;
+		int rate = 1;//默认为1
+		if (chgHis!=null) {//有历史则估算一下
+			for(int i: chgHis) rate += i;
+			rate = rate / chgHis.size();
+		}
+		int cost = nSteps * rate;
+		return curReward - cost;
+	}
+	@Override
+	public String toString() {
+		return id;
+	}
+	@Override
+	public int hashCode() {
+		return id.hashCode();
 	}
 	@Override
 	public int compareTo(JobDetail o) {
-		// TODO Auto-generated method stub
-		return 0;
+		return id.compareTo(o.id);
 	}
 	public final static String avaibleKey(int x, int y) {
 		return "x=" + x + ",y=" + y;
