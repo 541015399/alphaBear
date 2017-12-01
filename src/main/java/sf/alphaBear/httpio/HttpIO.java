@@ -25,7 +25,10 @@ public class HttpIO {
 		String url = HOST + ENV.getLabel() + "/" + envId + "/move";
 		
 		Gson gson = new Gson();
-		String rlt = HttpUtil.executePost(url, "{'direction': '" + direction + "'}");
+		long st = System.currentTimeMillis();
+		String rlt = HttpUtil.executePost(url, "{\"direction\": \"" + direction + "\"}");
+		long ut = System.currentTimeMillis() - st;
+		System.out.println("move http time = " + ut);
 		
 		MoveReqResult rltObj = gson.fromJson(rlt, MoveReqResult.class);
 		return rltObj;

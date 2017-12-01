@@ -106,7 +106,7 @@ public class HttpUtil {
 			HttpPost post = new HttpPost(url);
 			
 			StringEntity stringEntity = new StringEntity(json, "UTF-8");
-			stringEntity.setContentType("text/json");
+			stringEntity.setContentType("application/json");
 			post.setEntity(stringEntity);
 			
 			// 设置超时时间

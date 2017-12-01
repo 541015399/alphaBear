@@ -3,7 +3,7 @@ package sf.alphaBear;
 import java.util.ArrayList;
 import java.util.List;
 
-
+import sf.alphaBear.agent.SimpleBear;
 import sf.alphaBear.httpio.EnvReqResult;
 import sf.alphaBear.httpio.HttpIO;
 import sf.alphaBear.httpio.MoveReqResult;
@@ -14,13 +14,15 @@ public class AlphaBear {
 	List<MoveReqResult> hisStates;
 	MoveReqResult lastState = null;
 	
+	int totalUseTime = 0;
+	int totalReward = 0; 
+	
 	public int gogogo(EnvReqResult env, int maxStep) {
 		this.env = env;
 		this.hisStates = new ArrayList<>();
 		String envId = this.env.getId();
 		
-		int totalUseTime = 0;
-		int totalReward = 0; 
+		
 		
 		long st = System.currentTimeMillis();
 		long et = System.currentTimeMillis();
@@ -49,29 +51,5 @@ public class AlphaBear {
 	
 	MoveDirection makeDecision() {
 		return SimpleBear.myDecision();
-	}
-	
-	static class SimpleBear {
-		static int maxX = 12;
-		static int curX = 0;
-		static boolean moveR = true;
-		
-		static MoveDirection myDecision() {
-			MoveDirection dir = null;
-			if (moveR) {
-				curX ++;
-				dir = MoveDirection.R;
-			}else {
-				curX --;
-				dir = MoveDirection.L;
-			}
-			if (curX>=maxX) {
-				moveR = false;
-			}
-			if (curX<=0) {
-				moveR = true;
-			}
-			return dir;
-		}
 	}
 }
