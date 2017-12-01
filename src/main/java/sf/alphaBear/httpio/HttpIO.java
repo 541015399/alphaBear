@@ -6,12 +6,12 @@ import com.google.gson.Gson;
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
-	static String host = "http://10.2.5.64/";
-	String envId = "";
-	String url = "";
+	static String HOST = "http://10.2.5.64/";
+	static Env ENV = Env.TEST;
+	static String envId = null;
 	
-	public static EnvReqResult createEnv(Env env) {
-		String url = host + env.label + "/";
+	public static EnvReqResult createEnv() {
+		String url =  HOST + ENV.label;
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
@@ -19,12 +19,14 @@ public class HttpIO {
 		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
 		return rltObj;
 	}
-	
-	public static String commit() {
-		return "";
-	}
-	public static String step(String url) {
-		return HttpUtil.executeGet(url);
+	public static MoveReqResult step(Direction direction) {
+		String url = HOST + ENV.label + "/" + envId + "/move";
+		
+		Gson gson = new Gson();
+		String rlt = HttpUtil.executePost(url, "{'direction': '" + direction + "'}");
+		
+		MoveReqResult rltObj = gson.fromJson(rlt, MoveReqResult.class);
+		return rltObj;
 	}
 	
 	static enum Env {
@@ -34,15 +36,34 @@ public class HttpIO {
 			this.label = label;
 		}
 	}
+	static enum Direction {
+		U, D, L, R;
+	}
 	
-	public static void main(String[] args) {
-		String url = "http://10.2.5.64/" + Env.TEST.label;
+	public static void test() {
+		EnvReqResult rltObj = createEnv();
+		System.out.println(rltObj.msg);
+		
+		envId = rltObj.getId();
+		
+		MoveReqResult moveReqResult = step(Direction.U);
+		
+		System.out.println(moveReqResult.getReward());
+	}
+	
+	public static void test1() {
+		String url =  HOST + ENV.label;
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
 		
 		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
+		
 		System.out.println(rltObj.msg);
+	}
+	
+	public static void main(String[] args) {
+		test();
 	}
 	
 }
