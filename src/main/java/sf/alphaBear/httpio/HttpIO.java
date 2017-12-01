@@ -17,6 +17,8 @@ public class HttpIO {
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
+
+		System.out.println(rlt);
 		
 		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
 		return rltObj;
