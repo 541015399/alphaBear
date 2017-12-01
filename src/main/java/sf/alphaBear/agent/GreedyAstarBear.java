@@ -1,5 +1,6 @@
 package sf.alphaBear.agent;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.lucene.analysis.fi.FinnishAnalyzer;
 import org.neo4j.graphdb.Path;
 
@@ -24,21 +26,20 @@ import sf.alphaBear.httpio.pojo.Job;
 public class GreedyAstarBear extends BearTemplate {
 	GridStateDb db;
 	AstarAlgoByNeo4j astarAlgo;
-	
-	
+
 	int curStep = 0;
 	SchedulePath schedulePath ;
+	List<Point> walkHis ;
 	
 	public GreedyAstarBear(BearContext context) {
 		super(context);
 		
+		walkHis = new ArrayList<Point>();
 		db = new GridStateDb(Config.MAX_X, Config.MAX_Y, context.getWalls());
 		astarAlgo = new AstarAlgoByNeo4j(db);
 	}
 	
-	private void reTarget(List<Job> jobs, AI ai) {
-		curStep = 0;
-		schedulePath = null;
+	private SchedulePath reSchedule(List<Job> jobs, AI ai) {
 		
 		List<JobProfit> jobProfits = jobs.stream().map(j->{
 			SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
@@ -58,37 +59,31 @@ public class GreedyAstarBear extends BearTemplate {
 			}
 		});
 		
-		schedulePath = jobProfits.get(0).getPath();
+		SchedulePath path = jobProfits.get(0).getPath();
+		Point target = path.get(path.maxSteps());
+		System.out.println("reschedule - x=" + target.getX() + ",y=" + target.getY());
+		return jobProfits.get(0).getPath();
 	}
 
+	
 	public MoveDecision myDecision() {
 		AI ai = context.getAI();
+		walkHis.add(new Point(ai.getX(), ai.getY()));
 		List<Job> jobs = context.getJobs();
 		
-		Point target = schedulePath==null? null: schedulePath.get(curStep++);
-		
-		//没有路线
-		if (target==null) {
+		if (schedulePath==null || schedulePath.maxSteps()<curStep) {
 			if (jobs!=null && jobs.size()>0) {
-				reTarget(jobs, ai);
-				target = schedulePath==null? null: schedulePath.get(curStep++);
+				schedulePath = reSchedule(jobs, ai);
+				curStep = 0;
 			}
 		}
-		//这个脏代码， 待debug
-		if (target!=null) {
-			int retry = 5;
-			while((retry--)>0) {
-				try {
-					return calDirection(ai, target);
-				} catch (Exception e) {
-					reTarget(jobs, ai);
-					e.printStackTrace();
-				}
-			}
+		if (schedulePath==null || schedulePath.maxSteps()<0) {
+			return randomWalk(ai);
+		}else {
+			Point target = schedulePath.get(curStep ++);
+			return calDirection(ai, target);
 		}
-		//如果走到这里， 下一步需要重新选择路径
-		schedulePath = null;
-		return randomWalk(ai);
+		
 	}
 
 }

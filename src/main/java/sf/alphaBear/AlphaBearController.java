@@ -5,6 +5,7 @@ import sf.alphaBear.agent.AStarBear;
 
 import sf.alphaBear.agent.BearContext;
 import sf.alphaBear.agent.BearTemplate;
+import sf.alphaBear.agent.GreedyAstarBear;
 import sf.alphaBear.agent.SimpleBear;
 import sf.alphaBear.httpio.EnvReqResult;
 import sf.alphaBear.httpio.MoveReqResult;
@@ -17,7 +18,7 @@ public class AlphaBearController {
 	public int gogogo(EnvReqResult env, int maxStep) {
 		this.env = env;
 		this.context = new BearContext(env, maxStep);
-		this.bearAgent = new AStarBear(context);
+		this.bearAgent = new GreedyAstarBear(context);
 
 		long st = System.currentTimeMillis();
 		long et = System.currentTimeMillis();
@@ -32,7 +33,7 @@ public class AlphaBearController {
 
 			context.appendState(i, moveRlt, ut, moveRlt.getReward());
 
-			System.out.println("step " + i + ", time=" + ut + ", reward=" + moveRlt.getReward());
+			System.out.println("step " + i + ", time=" + ut + ", reward=" + moveRlt.getReward() + ",random walks=" + bearAgent.getRandomWalks());
 		}
 
 		System.out.println("total time = " + context.getTotalUseTime() + ", total reward = " + context.getTotalReward());

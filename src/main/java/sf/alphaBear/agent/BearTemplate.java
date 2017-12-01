@@ -48,7 +48,7 @@ public abstract class BearTemplate {
 	
 	protected MoveDecision calDirection(AI ai, Point target) {
 		if (ai.getX()==target.getX()) {
-			if (target.getY()>ai.getX()) {
+			if (target.getY()>ai.getY()) {
 				return MoveDecision.R;
 			}else {
 				return MoveDecision.L;
