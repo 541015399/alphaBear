@@ -9,9 +9,11 @@ import sf.alphaBear.httpio.HttpIO;
  */
 public class AlphaBearMain {
     public static void main( String[] args ){
-    EnvReqResult env = HttpIO.createEnv();
-    
-    	
-    	System.out.println( "Hello World!" );
+	    EnvReqResult env = HttpIO.createEnv();
+	    AlphaBear smartBear = new AlphaBear();
+	    
+	    int totalReward = smartBear.gogogo(env, 288);
+	    	
+	    	System.out.println( "congratulations, reward = " + totalReward);
     }
 }
