@@ -20,7 +20,9 @@ package sf.alphaBear.agent.db;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -31,6 +33,7 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 
+import sf.alphaBear.Point;
 import sf.alphaBear.httpio.pojo.Wall;
 
 public class GridStateDb {
@@ -41,6 +44,8 @@ public class GridStateDb {
 	private GraphDatabaseService graphDb;
 	private Index<Node> indexService;
 	private ConcurrentHashMap<String, String> wallSet ;
+	
+	private Set<Point> allValidPoints = new HashSet<Point>(); 
 	
 	public static String nodeKey(final int x,final int y) {
 		return "x=" + x + ",y=" + y;  
@@ -102,6 +107,7 @@ public class GridStateDb {
 
 	private void createChain(int x, int y, int maxX, int maxY) {
 		Node f = getOrCreateNode(x, y);
+		allValidPoints.add(new Point(x, y));
 		
 		Node l = x-1 >= 0 ? getOrCreateNode(x-1, y) : null;
 		Node r = x+1 <= maxX ? getOrCreateNode(x+1, y) : null;
@@ -151,6 +157,10 @@ public class GridStateDb {
 				graphDb.shutdown();
 			}
 		});
+	}
+
+	public Set<Point> getAllValidPoints() {
+		return allValidPoints;
 	}
 
 	private void deleteFileOrDirectory(File file) {

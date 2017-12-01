@@ -5,12 +5,15 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.neo4j.kernel.configuration.ssl.SslSystemSettings;
+
 import sf.alphaBear.Config;
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.Point;
 import sf.alphaBear.agent.algo.AstarAlgoByNeo4j;
 import sf.alphaBear.agent.algo.SchedulePath;
 import sf.alphaBear.agent.db.GridStateDb;
+import sf.alphaBear.agent.db.LookUpTable;
 import sf.alphaBear.httpio.pojo.AI;
 import sf.alphaBear.httpio.pojo.Job;
 
@@ -23,12 +26,18 @@ public class GreedyAstarBear extends BearTemplate {
 	SchedulePath schedulePath ;
 	List<Point> walkHis ;
 	
+	LookUpTable pathLookUpTbl ;
+	
 	public GreedyAstarBear(BearContext context) {
 		super(context);
 		
 		walkHis = new ArrayList<Point>();
 		db = new GridStateDb(Config.MAX_X, Config.MAX_Y, context.getWalls());
 		astarAlgo = new AstarAlgoByNeo4j(db);
+		long st = System.currentTimeMillis();
+		pathLookUpTbl = new LookUpTable(db);
+		long ut = System.currentTimeMillis() - st;
+		System.out.println("look up table use time - " + ut);
 	}
 	
 	private JobProfit reSchedule(List<Job> jobs, AI ai) {
