@@ -14,6 +14,15 @@ public class LookUpTable {
 	public final static String lookUpKey(int fx, int fy, int tx, int ty) {
 		return "f_x"+fx + "_y" + fy + "_t_x" + tx + "_y" + ty; 
 	}
+	public SchedulePath findPath(int fx, int fy, int tx, int ty) {
+		String key = lookUpKey(fx, fy, tx, ty);
+		SchedulePath path = pathTbl.get(key);
+		if (path==null) {
+			path = algo.findPath(fx, fy, tx, ty);
+			pathTbl.put(key, path);
+		}
+		return path;
+	}
 	public LookUpTable(GridStateDb db) {
 		this.db = db;
 		this.algo = new AstarAlgoByNeo4j(db);

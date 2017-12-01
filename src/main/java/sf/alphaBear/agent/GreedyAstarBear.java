@@ -43,7 +43,10 @@ public class GreedyAstarBear extends BearTemplate {
 	private JobProfit reSchedule(List<Job> jobs, AI ai) {
 		
 		List<JobProfit> jobProfits = jobs.stream().map(j->{
-			SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
+			// SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
+			
+			SchedulePath schedulePath = pathLookUpTbl.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
+			
 			int steps = schedulePath.maxSteps() + 1;
 			JobDetail detail = context.getDetail(j);
 			int cost = detail==null? steps : detail.predictReward(steps);
