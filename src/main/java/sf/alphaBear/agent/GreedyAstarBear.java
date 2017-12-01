@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -27,6 +28,7 @@ public class GreedyAstarBear extends BearTemplate {
 	GridStateDb db;
 	AstarAlgoByNeo4j astarAlgo;
 
+	JobProfit curJobProfit ;
 	int curStep = 0;
 	SchedulePath schedulePath ;
 	List<Point> walkHis ;
@@ -39,7 +41,7 @@ public class GreedyAstarBear extends BearTemplate {
 		astarAlgo = new AstarAlgoByNeo4j(db);
 	}
 	
-	private SchedulePath reSchedule(List<Job> jobs, AI ai) {
+	private JobProfit reSchedule(List<Job> jobs, AI ai) {
 		
 		List<JobProfit> jobProfits = jobs.stream().map(j->{
 			SchedulePath schedulePath = astarAlgo.findPath(ai.getX(), ai.getY(), j.getX(), j.getY());
@@ -52,6 +54,15 @@ public class GreedyAstarBear extends BearTemplate {
 			.filter(o->o.getProfit()>0)
 			.collect(Collectors.toList());
 		
+		List<JobProfit> newList = new ArrayList<>();
+		int range = 2;
+		while(newList.size()==0) {
+			final int fRange = range;
+			newList = jobProfits.stream().filter(o->o.getPath().maxSteps()<=fRange).collect(Collectors.toList());
+			range ++;
+		}
+		jobProfits = newList;
+		
 		jobProfits.sort(new Comparator<JobProfit>() {
 			@Override
 			public int compare(JobProfit o1, JobProfit o2) {
@@ -62,27 +73,43 @@ public class GreedyAstarBear extends BearTemplate {
 		SchedulePath path = jobProfits.get(0).getPath();
 		Point target = path.get(path.maxSteps());
 		System.out.println("reschedule - x=" + target.getX() + ",y=" + target.getY());
-		return jobProfits.get(0).getPath();
+		return jobProfits.get(0);
 	}
 
-	
 	public MoveDecision myDecision() {
 		AI ai = context.getAI();
 		walkHis.add(new Point(ai.getX(), ai.getY()));
 		List<Job> jobs = context.getJobs();
-		
-		if (schedulePath==null || schedulePath.maxSteps()<curStep) {
+		//初始化， 或者走到头了
+		if (curJobProfit==null || schedulePath==null || schedulePath.maxSteps()<curStep) {
+			curJobProfit = null;
+			schedulePath = null;
+			curStep = 0;
 			if (jobs!=null && jobs.size()>0) {
-				schedulePath = reSchedule(jobs, ai);
+				curJobProfit = reSchedule(jobs, ai);
+				schedulePath = curJobProfit.getPath();
+				
+				Point target = schedulePath.get(curStep ++);
+				return calDirection(ai, target);
+			}else {
+				return randomWalk(ai);
+			}
+		}else {
+			// 正常走，不管如何，对比一下
+			JobProfit tryJob = reSchedule(jobs, ai);
+			if (tryJob.getProfit() > curJobProfit.getProfit()) {
+				curJobProfit = tryJob;
+				schedulePath = curJobProfit.getPath();
 				curStep = 0;
+				
+				Point target = schedulePath.get(curStep ++);
+				return calDirection(ai, target);
+			}else {
+				Point target = schedulePath.get(curStep ++);
+				return calDirection(ai, target);
 			}
 		}
-		if (schedulePath==null || schedulePath.maxSteps()<0) {
-			return randomWalk(ai);
-		}else {
-			Point target = schedulePath.get(curStep ++);
-			return calDirection(ai, target);
-		}
+		
 		
 	}
 

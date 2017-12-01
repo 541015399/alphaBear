@@ -98,6 +98,7 @@ public class AstarAlgoByNeo4j {
 			Node toNode = db.getOrCreateNode(tox, toy);
 			// START SNIPPET: shortestPathUsage
 			PathFinder<WeightedPath> finder = null;
+			
 			finder = GraphAlgoFactory.aStar(PathExpanders.forTypeAndDirection(GridStateDb.KNOWS, Direction.OUTGOING),
 					CommonEvaluators.doubleCostEvaluator("w"), estimateEvaluator);
 			// finder = GraphAlgoFactory.aStar(
