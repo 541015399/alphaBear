@@ -3,6 +3,8 @@ package sf.alphaBear.httpio;
 
 import com.google.gson.Gson;
 
+import sf.alphaBear.Env;
+import sf.alphaBear.MoveDirection;
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
@@ -11,7 +13,7 @@ public class HttpIO {
 	static String envId = null;
 	
 	public static EnvReqResult createEnv() {
-		String url =  HOST + ENV.label;
+		String url =  HOST + ENV.getLabel();
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
@@ -19,8 +21,8 @@ public class HttpIO {
 		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
 		return rltObj;
 	}
-	public static MoveReqResult step(Direction direction) {
-		String url = HOST + ENV.label + "/" + envId + "/move";
+	public static MoveReqResult step(MoveDirection direction) {
+		String url = HOST + ENV.getLabel() + "/" + envId + "/move";
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'direction': '" + direction + "'}");
@@ -29,30 +31,19 @@ public class HttpIO {
 		return rltObj;
 	}
 	
-	static enum Env {
-		TEST("test"), REAL("competition");
-		String label;
-		private Env(String label) {
-			this.label = label;
-		}
-	}
-	static enum Direction {
-		U, D, L, R;
-	}
-	
 	public static void test() {
 		EnvReqResult rltObj = createEnv();
 		System.out.println(rltObj.msg);
 		
 		envId = rltObj.getId();
 		
-		MoveReqResult moveReqResult = step(Direction.U);
+		MoveReqResult moveReqResult = step(MoveDirection.U);
 		
 		System.out.println(moveReqResult.getReward());
 	}
 	
 	public static void test1() {
-		String url =  HOST + ENV.label;
+		String url =  HOST + ENV.getLabel();
 		
 		Gson gson = new Gson();
 		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
