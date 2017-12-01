@@ -6,19 +6,18 @@ import com.google.gson.Gson;
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
+	static String host = "http://10.2.5.64/";
 	String envId = "";
 	String url = "";
 	
-	public static String createEnv(Env env) {
-		String url = "/" + env.label + "/";
+	public static EnvReqResult createEnv(Env env) {
+		String url = host + env.label + "/";
 		
 		Gson gson = new Gson();
-		/*String json = gson.toJson(new Param() {
-			String name = "alphaBear";
-		});*/
+		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
 		
-		HttpUtil.executePost(url, "");
-		return "";
+		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
+		return rltObj;
 	}
 	
 	public static String commit() {
@@ -37,15 +36,13 @@ public class HttpIO {
 	}
 	
 	public static void main(String[] args) {
-		String url = "/" + Env.TEST.label + "/";
+		String url = "http://10.2.5.64/" + Env.TEST.label;
 		
-		/*String json = JSON.toJSONString(new Param() {
-			String name = "alphaBear";
-		});*/
+		Gson gson = new Gson();
+		String rlt = HttpUtil.executePost(url, "{'name': 'alphaBear'}");
 		
-		System.out.println("");
-		
-		HttpUtil.executePost(url, "{'name': 'alphaBear'}");
+		EnvReqResult rltObj = gson.fromJson(rlt, EnvReqResult.class);
+		System.out.println(rltObj.msg);
 	}
 	
 }

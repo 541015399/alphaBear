@@ -46,7 +46,7 @@ public class CalculateAstarPath
     private static GraphDatabaseService graphDb;
     private static Index<Node> indexService;
 
-    public static void main( final String[] args )
+    public final static void main(String[] args )
     {
         deleteFileOrDirectory( databaseDirectory );
         graphDb = new GraphDatabaseFactory().newEmbeddedDatabase( databaseDirectory );
