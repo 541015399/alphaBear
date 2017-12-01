@@ -98,6 +98,7 @@ public class GreedyAstarBear extends BearTemplate {
 			// 正常走，不管如何，对比一下
 			JobProfit tryJob = reSchedule(jobs, ai);
 			if (tryJob.getProfit() > curJobProfit.getProfit()) {
+				System.out.println("reschedule gain -" + (tryJob.getProfit() - curJobProfit.getProfit()));
 				curJobProfit = tryJob;
 				schedulePath = curJobProfit.getPath();
 				curStep = 0;
