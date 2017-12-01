@@ -21,6 +21,7 @@ package sf.alphaBear.agent.algo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.neo4j.cypher.internal.frontend.v2_3.perty.print.condense;
 import org.neo4j.graphalgo.CommonEvaluators;
 import org.neo4j.graphalgo.EstimateEvaluator;
 import org.neo4j.graphalgo.GraphAlgoFactory;
@@ -70,8 +71,8 @@ public class AstarAlgoByNeo4j {
 			// PathExpanders.forTypeAndDirection( KNOWS, Direction.BOTH ), 4 );
 			Path foundPath = finder.findSinglePath(fromNode, toNode);
 			
-			System.out.println("Path from (0,0) to (,3): " + Paths.simplePathToString(foundPath, GridStateDb.NAME_KEY));
-			printPath(foundPath);
+			//System.out.println("Path from (0,0) to (,3): " + Paths.simplePathToString(foundPath, GridStateDb.NAME_KEY));
+			//printPath(foundPath);
 			// END SNIPPET: shortestPathUsage
 		}
 	}
@@ -103,13 +104,19 @@ public class AstarAlgoByNeo4j {
 			// PathExpanders.forTypeAndDirection( KNOWS, Direction.BOTH ), 4 );
 			Path foundPath = finder.findSinglePath(fromNode, toNode);
 			
+			//得把第一个节点（自身节点去掉）
+			boolean flag = true;
 			Node current = foundPath.startNode();
 	        for ( Relationship rel : foundPath.relationships() ){
 	        		int x = Integer.parseInt(current.getProperty("x").toString()); 
 	        		int y = Integer.parseInt(current.getProperty("y").toString()); 
 	        		Point p = new Point(x, y);
-	        		rltPath.addPoint(p);
 	        		
+	        		if (!flag) {
+	        			rltPath.addPoint(p);
+				}else {
+					flag = false;
+				}
 	            current = rel.getOtherNode( current );
 	        }
 	        if ( null != current ){
@@ -119,7 +126,8 @@ public class AstarAlgoByNeo4j {
 	        		rltPath.addPoint(p);
 	        }
 	        
-	        rltPath.print();
+	        
+	        //rltPath.print();
 	        //System.out.println("Path from (0,0) to (,3): " + Paths.simplePathToString(foundPath, GridStateDb.NAME_KEY));
 		}
 		

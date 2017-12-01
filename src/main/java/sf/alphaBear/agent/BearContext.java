@@ -103,7 +103,10 @@ public class BearContext {
 	public Map<String, JobDetail> getAvaibleJobDetails(){
 		return avaiableJobDetails;
 	}
-
+	public JobDetail getDetail(Job j) {
+		String key = JobDetail.avaibleKey(j.getX(), j.getY());
+		return avaiableJobDetails.get(key);
+	}
 	public List<MoveReqResult> getHisMoveRlt() {
 		return hisMoveRlt;
 	}
