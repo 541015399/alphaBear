@@ -1,12 +1,25 @@
 package sf.alphaBear.httpio;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+
+import com.google.gson.Gson;
 
 import sf.alphaBear.util.HttpUtil;
 
 public class HttpIO {
+	String envId = "";
 	String url = "";
+	
+	public static String createEnv(Env env) {
+		String url = "/" + env.label + "/";
+		
+		Gson gson = new Gson();
+		/*String json = gson.toJson(new Param() {
+			String name = "alphaBear";
+		});*/
+		
+		HttpUtil.executePost(url, "");
+		return "";
+	}
 	
 	public static String commit() {
 		return "";
@@ -15,17 +28,24 @@ public class HttpIO {
 		return HttpUtil.executeGet(url);
 	}
 	
-	public static void main(String[] args) {
-		String url = "https://www.baidu.com/home/msg/data/personalcontent?num=8&indextype=manht&_req_seqid=0xa5af389900012e51&asyn=1&t=1512061252382&sid=1452_21104_17001_25177_25146_22158";
-		String rlt = step(url);
-		
-		Object obj = JSON.parse(rlt);
-		if (obj instanceof JSONObject) {
-			Integer errNo = ((JSONObject) obj).getInteger("errNo");
-			System.out.println(errNo);
+	static enum Env {
+		TEST("test"), REAL("competition");
+		String label;
+		private Env(String label) {
+			this.label = label;
 		}
-				
-		System.out.println(rlt);
+	}
+	
+	public static void main(String[] args) {
+		String url = "/" + Env.TEST.label + "/";
+		
+		/*String json = JSON.toJSONString(new Param() {
+			String name = "alphaBear";
+		});*/
+		
+		System.out.println("");
+		
+		HttpUtil.executePost(url, "{'name': 'alphaBear'}");
 	}
 	
 }

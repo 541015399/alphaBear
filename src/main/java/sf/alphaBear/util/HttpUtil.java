@@ -11,6 +11,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
@@ -99,10 +100,15 @@ public class HttpUtil {
 		return executeGetWithHeader(url, null);
 	}
 
-	public static final String executePost(String url) {
+	public static final String executePost(String url, String json) {
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		try (CloseableHttpClient client = httpClientBuilder.build();) {
 			HttpPost post = new HttpPost(url);
+			
+			StringEntity stringEntity = new StringEntity(json, "UTF-8");
+			stringEntity.setContentType("text/json");
+			post.setEntity(stringEntity);
+			
 			// 设置超时时间
 			RequestConfig conf = RequestConfig.custom().setConnectTimeout(10 * 1000)
 					.setConnectionRequestTimeout(10 * 1000).setSocketTimeout(30 * 1000).build();

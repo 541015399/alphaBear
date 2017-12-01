@@ -3,10 +3,8 @@ package sf.alphaBear.neo4j;
 import java.io.File;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.bytedeco.javacpp.videoInputLib.videoDevice;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
-import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Label;
 import org.neo4j.graphdb.Node;

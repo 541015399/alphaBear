@@ -36,19 +36,7 @@
     <artifactId>neo4j</artifactId>
     <version>3.4.0-alpha02</version>
 </dependency>
-  	
-  	<!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-core -->
-<dependency>
-    <groupId>org.deeplearning4j</groupId>
-    <artifactId>deeplearning4j-core</artifactId>
-    <version>0.9.1</version>
-</dependency>
-  	<!-- https://mvnrepository.com/artifact/org.deeplearning4j/deeplearning4j-nn -->
-<dependency>
-    <groupId>org.deeplearning4j</groupId>
-    <artifactId>deeplearning4j-nn</artifactId>
-    <version>0.9.1</version>
-</dependency>
+ 
 
 <!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 <dependency>
