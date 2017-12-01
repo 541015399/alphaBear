@@ -3,6 +3,10 @@ package sf.alphaBear.agent;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author lupinyin
+ * TODO : 按照历史预计n步后的值
+ */
 public class JobDetail {
 	final int x;
 	final int y;
@@ -12,6 +16,14 @@ public class JobDetail {
 	
 	int lifeEndStep;
 	int curReward;
+	
+	/*
+	 * 当前尚未开发完成， 所以不推荐使用
+	 */
+	@Deprecated
+	public int predictReward(int nSteps) {
+		return curReward;
+	}
 	
 	public JobDetail(int x, int y, int initReward, int step) {
 		this.x = x;
