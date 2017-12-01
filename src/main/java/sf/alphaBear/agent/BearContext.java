@@ -9,6 +9,7 @@ import sf.alphaBear.httpio.HttpIO;
 import sf.alphaBear.httpio.MoveReqResult;
 
 public class BearContext {
+	// context
 	EnvReqResult env ;
 	
 	int maxStep = 288;
