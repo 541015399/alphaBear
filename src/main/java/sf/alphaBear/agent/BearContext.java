@@ -2,6 +2,12 @@ package sf.alphaBear.agent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+import org.neo4j.cypher.internal.compiler.v2_3.ast.rewriters.projectFreshSortExpressions;
 
 import sf.alphaBear.MoveDecision;
 import sf.alphaBear.httpio.EnvReqResult;
@@ -24,19 +30,25 @@ public class BearContext {
 	MoveReqResult lastState = null;
 	
 	long totalUseTime = 0;
-	int totalReward = 0; 
+	int totalReward = 0;
+	
+	ConcurrentHashMap<String, JobDetail> allJobDetails;
+	ConcurrentHashMap<String, JobDetail> avaiableJobDetails;
 	
 	public BearContext(EnvReqResult env, int maxStep) {
 		this.env = env;
 		this.maxStep = maxStep;
 		this.hisMoveRlt = new ArrayList<>();
 		this.hisState = new ArrayList<>();
+		this.allJobDetails = new ConcurrentHashMap<>();
+		this.avaiableJobDetails = new ConcurrentHashMap<String, JobDetail>();
 		// 最初状态
 		this.hisState.add(env.getState());
 	}
 	public MoveReqResult doStepReq(MoveDecision decision) {
 		return HttpIO.step(env.getId(), decision);
 	}
+	
 	public void appendState(Integer step, MoveReqResult moveReqResult, long useTime, int reward) {
 		this.curStep = step;
 		this.hisMoveRlt.add(moveReqResult);
@@ -45,6 +57,34 @@ public class BearContext {
 		this.totalUseTime += useTime;
 		this.totalReward += reward;
 		
+		List<Job> jobUpdates = moveReqResult.getState().getJobs();
+		if (jobUpdates!=null && jobUpdates.size()>0) {
+			// 更新状态， 或者需要生成新的job detail
+			Map<String, JobDetail> newMap = jobUpdates.stream().map(up->{
+				String key = JobDetail.avaibleKey(up.getX(), up.getY());
+				JobDetail detail = avaiableJobDetails.get(key);
+				if (detail==null) {
+					detail = new JobDetail(up.getX(), up.getY(), up.getValue(), step);
+				}
+				detail.update(up.getValue());
+				
+				return detail;
+			}).collect(Collectors.toConcurrentMap(JobDetail::getAvaibleKey, p->p));
+			//job 生命终结
+			List<JobDetail> endJobs = avaiableJobDetails.entrySet().stream().map(e->{
+				if(!newMap.containsKey(e.getValue().getAvaibleKey())) {
+					e.getValue().endLife(step);
+				}
+				return e.getValue();
+			}).filter(p->p.getLifeEndStep()>0).collect(Collectors.toList());
+			endJobs.stream().map(p->{
+				allJobDetails.put(p.getId(), p);
+				return 1;
+			}).count();
+			//更换
+			avaiableJobDetails.clear();
+			avaiableJobDetails.putAll(newMap);
+		}
 	}
 	
 	public AI getAI() {
@@ -55,6 +95,9 @@ public class BearContext {
 	}
 	public List<Job> getJobs(){
 		return lastState.getState().getJobs();
+	}
+	public Map<String, JobDetail> getAvaibleJobDetails(){
+		return avaiableJobDetails;
 	}
 
 	public EnvReqResult getEnv() {

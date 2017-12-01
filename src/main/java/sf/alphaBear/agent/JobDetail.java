@@ -7,12 +7,15 @@ import java.util.List;
  * @author lupinyin
  * TODO : 按照历史预计n步后的值
  */
-public class JobDetail {
+public class JobDetail implements Comparable<JobDetail> {
 	final int x;
 	final int y;
 	final int initReward;
 	final int lifeStartStep;
 	final List<Integer> chgHis;
+	
+	final String avaibleKey;
+	final String id ;
 	
 	int lifeEndStep;
 	int curReward;
@@ -24,13 +27,23 @@ public class JobDetail {
 	public int predictReward(int nSteps) {
 		return curReward;
 	}
-	
+	@Override
+	public int compareTo(JobDetail o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	public final static String avaibleKey(int x, int y) {
+		return "x=" + x + ",y=" + y;
+	}
 	public JobDetail(int x, int y, int initReward, int step) {
 		this.x = x;
 		this.y = y;
 		this.initReward = initReward;
 		this.lifeStartStep = step;
 		this.chgHis = new ArrayList<Integer>();
+		
+		this.avaibleKey = avaibleKey(x, y);
+		this.id = "x=" + x + ",y=" + y + ",step=" + step + "val=" + initReward;
 	}
 	public void update(int reward) {
 		this.curReward = reward;
@@ -40,6 +53,9 @@ public class JobDetail {
 		this.lifeEndStep = step;
 	}
 	
+	public String getAvaibleKey() {
+		return avaibleKey;
+	}
 	public int getX() {
 		return x;
 	}
@@ -67,4 +83,10 @@ public class JobDetail {
 	public List<Integer> getChgHis() {
 		return chgHis;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	
 }
