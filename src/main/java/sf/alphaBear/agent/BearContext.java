@@ -30,7 +30,7 @@ public class BearContext {
 		this.env = env;
 		this.maxStep = maxStep;
 		this.hisMoveRlt = new ArrayList<MoveReqResult>();
-		
+		// 最初状态
 		this.hisState.add(env.getState());
 	}
 	public MoveReqResult doStepReq(MoveDecision decision) {
@@ -47,7 +47,7 @@ public class BearContext {
 	}
 	
 	public AI getAI() {
-		return lastState==null? null: lastState.getState().getAi();
+		return lastState.getState().getAi();
 	}
 	public List<Wall> getWalls(){
 		return env.getState().getWalls();
